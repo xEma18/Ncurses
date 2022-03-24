@@ -104,14 +104,50 @@ public:
   }
 
   bool check_for_h_walls(wall *head, int direction){    // the "h" stands for "horizontal"
+    bool flag = true;
     switch(direction){
-      case 1: return ((this->current_y - 1 != head->start_y) || (this->current_y - 1 == head->start_y && (this->current_x >= head->start_door && this->current_x <= head->end_door)));
-      case 2: return ((this->current_y + 1 != head->start_y) || (this->current_y + 1 == head->start_y && (this->current_x >= head->start_door && this->current_x <= head->end_door)));
-      case 3: return ((this->current_y != head->start_y) || (this->current_y == head->start_y && (this->current_x - 1 >= head->start_door && this->current_x - 1 <= head->end_door)));
-      case 4: return ((this->current_y != head->start_y) || (this->current_y == head->start_y && (this->current_x + 1 >= head->start_door && this->current_x + 1 <= head->end_door)));
-      default: return false;
+      case 1: {
+        while(head != NULL){
+          if(this->current_y - 1 == head->start_y && !(this->current_x >= head->start_door && this->current_x <= head->end_door)){
+            flag = false;
+          }
+          head = head->next;
+        }
+        break;
+      };
+      case 2: {
+        while(head != NULL){
+          if(this->current_y + 1 == head->start_y && !(this->current_x >= head->start_door && this->current_x <= head->end_door)){
+            flag = false;
+          }
+          head = head->next;
+        }
+        break;
+      };
+      case 3: {
+        while(head != NULL){
+          if(this->current_y == head->start_y && !(this->current_x - 1 >= head->start_door && this->current_x - 1 <= head->end_door)){
+            flag = false;
+          }
+          head = head->next;
+        }
+        break;
+      };
+      case 4: {
+        while(head != NULL){
+          if(this->current_y == head->start_y && !(this->current_x + 1 >= head->start_door && this->current_x + 1 <= head->end_door)){
+            flag = false;
+          }
+          head = head->next;
+        }
+        break;
+      };
+      default: flag = false; break;
     }
+    return flag;
   }
+
+  // bool check_for_v_walls(wall *head, int direction);
 
   void move_up(wall *head){
     if(this->current_y > 1 && this->check_for_h_walls(head, 1)){ // a function that checks wheter there's a wall or not  wether
@@ -163,6 +199,9 @@ int main(){
   WINDOW *win = newwin(20, 40, 5, 10);
 
   wall *head = new wall;
+  wall *second = new wall;
+  wall *third = new wall;
+
   head->way = true;
   head->start_x = 1;
   head->end_x = 39;
@@ -170,7 +209,23 @@ int main(){
   head->start_door = 9;
   head->end_door = 12;
 
-  head->next = NULL;
+  second->way = true;
+  second->start_x = 1;
+  second->end_x = 39;
+  second->start_y = 13;
+  second->start_door = 25;
+  second->end_door = 28;
+
+  third->way = true;
+  third->start_x = 1;
+  third->end_x = 39;
+  third->start_y = 9;
+  third->start_door = 15;
+  third->end_door = 18;
+
+  head->next = second;
+  second->next = third;
+  third->next = NULL;
 
   refresh();
   box(win, 0, 0);
